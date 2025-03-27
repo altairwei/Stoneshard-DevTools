@@ -1,3 +1,5 @@
+function scr_console_help()
+{
     var _comandName = argument[0];
     
     if (array_length(_comandName) > 1)
@@ -334,8 +336,14 @@
                 scr_console_output_list("Enables debug mode for the global map.", gray);
                 break;
 
+            case "respec":
+                scr_console_output_list(_comandName[0], green);
+                scr_console_output_list("Set all attribute to 10 and redistribute the excess points", gray);
+                break;
+
             default:
                 scr_console_output_list("invalid command name", red);
                 break;
         }
     }
+}

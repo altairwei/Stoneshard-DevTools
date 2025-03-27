@@ -12,7 +12,8 @@
         array_push(_argumentsArray, "")
 
     var _foundCommand = ds_map_find_value(commandsMap, _command);
-    
+
+    scr_console_output_list(_string, white);
     if (is_undefined(_foundCommand))
         scr_console_output_list("Command '" + _command + "' not found, use 'help'", red);
     else
