@@ -37,8 +37,6 @@ public class DevTools : Mod
 
         // Console
 
-        // FIXME: 关闭 console 后，还会接受用户的键盘指令。
-
         Msl.LoadAssemblyAsString("gml_Object_o_console_controller_Draw_64")
             .MatchFromUntil(":[0]", "exit.i")
             .ReplaceBy("")
@@ -84,12 +82,12 @@ public class DevTools : Mod
 
         Msl.LoadGML("gml_GlobalScript_scr_console_help")
             .MatchFromUntil("function scr_console_help()", "}")
-            .InsertBelow(ModFiles, "scr_console_help.gml")
+            .ReplaceBy(ModFiles, "scr_console_help.gml")
             .Save();
         
         Msl.LoadGML("gml_GlobalScript_scr_console_drop")
             .MatchFromUntil("function scr_console_drop()", "}")
-            .InsertBelow(ModFiles, "scr_console_drop.gml")
+            .ReplaceBy(ModFiles, "scr_console_drop.gml")
             .Save();
         
         Msl.LoadGML("gml_GlobalScript_scr_console_time_change")
@@ -98,6 +96,26 @@ public class DevTools : Mod
             .Save();
         
         Msl.AddFunction(ModFiles.GetCode("scr_console_respec.gml"), "scr_console_respec");
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_globalset")
+            .MatchFromUntil("function scr_console_globalset()", "}")
+            .ReplaceBy(ModFiles, "scr_console_globalset.gml")
+            .Save();
+        
+        Msl.LoadGML("gml_GlobalScript_scr_console_minimap_visible")
+            .MatchFromUntil("function scr_console_minimap_visible()", "}")
+            .ReplaceBy(ModFiles, "scr_console_minimap_visible.gml")
+            .Save();
+        
+        Msl.LoadGML("gml_GlobalScript_scr_console_debugmap")
+            .MatchFromUntil("function scr_console_debugmap()", "}")
+            .ReplaceBy(ModFiles, "scr_console_debugmap.gml")
+            .Save();
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_room")
+            .MatchFromUntil("function scr_console_room()", "}")
+            .ReplaceBy(ModFiles, "scr_console_room.gml")
+            .Save();
     }
 
     private void DebugPatching()

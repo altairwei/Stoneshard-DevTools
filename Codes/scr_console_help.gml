@@ -41,7 +41,7 @@ function scr_console_help()
         scr_console_output_list("attr [id… amount] | [reset]", gray);
         scr_console_output_list("boost [id amount step]", gray);
         scr_console_output_list("lvl [level]", gray);
-        scr_console_output_list("globalset [x] [y]", gray);
+        scr_console_output_list("globalset [x | location ] [y]", gray);
         scr_console_output_list("nocd", gray);
         scr_console_output_list("getseed", gray);
     }
@@ -314,11 +314,13 @@ function scr_console_help()
                 break;
 
             case "globalset":
-                scr_console_output_list(_comandName[0] + " [x] [y]", green);
+                scr_console_output_list(_comandName[0] + " [x | location ] [y]", green);
                 scr_console_output_list("Moves the player by specified coordinates on the global map.", gray);
                 scr_console_output_list("Options:", white);
                 scr_console_output_list("x: X-coordinate offset (default 0).", gray);
                 scr_console_output_list("y: Y-coordinate offset (default 0).", gray);
+                scr_console_output_list("location: Osbrook, Mannshire, Brynn, BanditFarm, etc. (see gml_GlobalScript_table_locations)", gray);
+                // scr_console_output_list(string_join_ext("\n", array_sort(ds_map_keys_to_array(global.locationMapName))), gray);
                 break;
 
             case "nocd":
