@@ -51,6 +51,7 @@
         ds_map_add(commandsMap, "skill_test", scr_console_skill_test);
         ds_map_add(commandsMap, "locate_traps", scr_console_lacateTraps);
         ds_map_add(commandsMap, "respec", gml_Script_scr_console_respec);
+        ds_map_add(commandsMap, "export", gml_Script_scr_console_export);
     }
     else
     {

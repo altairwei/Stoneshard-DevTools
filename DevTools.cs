@@ -116,6 +116,13 @@ public class DevTools : Mod
             .MatchFromUntil("function scr_console_room()", "}")
             .ReplaceBy(ModFiles, "scr_console_room.gml")
             .Save();
+        
+        Msl.AddFunction(ModFiles.GetCode("scr_console_export.gml"), "scr_console_export");
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_buff")
+            .MatchFromUntil("function scr_console_buff()", "}")
+            .ReplaceBy(ModFiles, "scr_console_buff.gml")
+            .Save();
     }
 
     private void DebugPatching()

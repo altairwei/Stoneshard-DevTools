@@ -44,6 +44,8 @@ function scr_console_help()
         scr_console_output_list("globalset [x | location ] [y]", gray);
         scr_console_output_list("nocd", gray);
         scr_console_output_list("getseed", gray);
+        scr_console_output_list("respec", gray);
+        scr_console_output_list("export [sep] [name]", gray);
     }
     else
     {
@@ -319,8 +321,8 @@ function scr_console_help()
                 scr_console_output_list("Options:", white);
                 scr_console_output_list("x: X-coordinate offset (default 0).", gray);
                 scr_console_output_list("y: Y-coordinate offset (default 0).", gray);
-                scr_console_output_list("location: Osbrook, Mannshire, Brynn, BanditFarm, etc. (see gml_GlobalScript_table_locations)", gray);
-                // scr_console_output_list(string_join_ext("\n", array_sort(ds_map_keys_to_array(global.locationMapName))), gray);
+                scr_console_output_list("location: Osbrook, Mannshire, Brynn, BanditFarm, etc.", gray);
+                scr_console_output_list("    use `export ; table_locations` to get all locations.", gray);
                 break;
 
             case "nocd":
@@ -341,6 +343,15 @@ function scr_console_help()
             case "respec":
                 scr_console_output_list(_comandName[0], green);
                 scr_console_output_list("Set all attribute to 10 and redistribute the excess points", gray);
+                break;
+
+            case "export":
+                scr_console_output_list(_comandName[0] + " [sep] [name]", green);
+                scr_console_output_list("Options:", white);
+                scr_console_output_list("Export internal table to delimiter-separated table file.", gray);
+                scr_console_output_list("Options:", gray);
+                scr_console_output_list("sep: semicolon (;), colon (:), comma (,), etc.", gray);
+                scr_console_output_list("name: table_curses, table_items, table_equipment, etc.", gray);
                 break;
 
             default:
