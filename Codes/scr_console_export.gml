@@ -2,14 +2,17 @@ function scr_console_export()
 {
     var _argumentsArray = argument[0]
     var _argumentsArrayLength = array_length(_argumentsArray)
-    if (_argumentsArrayLength != 2)
+    if (_argumentsArrayLength < 1)
     {
         scr_console_output_list("invalid argument number", red)
         return;
     }
 
-    var _delimiter = _argumentsArray[0]
-    var _table_name = _argumentsArray[1]
+    var _table_name = _argumentsArray[0]
+
+    var _delimiter = ";"
+    if (_argumentsArrayLength >= 2)
+        _delimiter = _argumentsArray[1]
 
     var _func = asset_get_index(_table_name)
     if (_func == -1)

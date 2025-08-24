@@ -346,12 +346,12 @@ function scr_console_help()
                 break;
 
             case "export":
-                scr_console_output_list(_comandName[0] + " [sep] [name]", green);
+                scr_console_output_list(_comandName[0] + " [name] [sep]", green);
                 scr_console_output_list("Options:", white);
                 scr_console_output_list("Export internal table to delimiter-separated table file.", gray);
                 scr_console_output_list("Options:", gray);
-                scr_console_output_list("sep: semicolon (;), colon (:), comma (,), etc.", gray);
                 scr_console_output_list("name: table_curses, table_items, table_equipment, etc.", gray);
+                scr_console_output_list("sep: semicolon (;), colon (:), comma (,), etc.", gray);
                 break;
 
             default:

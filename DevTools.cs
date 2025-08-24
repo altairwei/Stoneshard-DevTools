@@ -84,29 +84,29 @@ public class DevTools : Mod
             .MatchFromUntil("function scr_console_help()", "}")
             .ReplaceBy(ModFiles, "scr_console_help.gml")
             .Save();
-        
+
         Msl.LoadGML("gml_GlobalScript_scr_console_drop")
             .MatchFromUntil("function scr_console_drop()", "}")
             .ReplaceBy(ModFiles, "scr_console_drop.gml")
             .Save();
-        
+
         Msl.LoadGML("gml_GlobalScript_scr_console_time_change")
             .MatchFromUntil("function scr_console_time_change", "}")
             .ReplaceBy(ModFiles, "scr_console_time_change.gml")
             .Save();
-        
+
         Msl.AddFunction(ModFiles.GetCode("scr_console_respec.gml"), "scr_console_respec");
 
         Msl.LoadGML("gml_GlobalScript_scr_console_globalset")
             .MatchFromUntil("function scr_console_globalset()", "}")
             .ReplaceBy(ModFiles, "scr_console_globalset.gml")
             .Save();
-        
+
         Msl.LoadGML("gml_GlobalScript_scr_console_minimap_visible")
             .MatchFromUntil("function scr_console_minimap_visible()", "}")
             .ReplaceBy(ModFiles, "scr_console_minimap_visible.gml")
             .Save();
-        
+
         Msl.LoadGML("gml_GlobalScript_scr_console_debugmap")
             .MatchFromUntil("function scr_console_debugmap()", "}")
             .ReplaceBy(ModFiles, "scr_console_debugmap.gml")
@@ -116,12 +116,32 @@ public class DevTools : Mod
             .MatchFromUntil("function scr_console_room()", "}")
             .ReplaceBy(ModFiles, "scr_console_room.gml")
             .Save();
-        
+
         Msl.AddFunction(ModFiles.GetCode("scr_console_export.gml"), "scr_console_export");
 
         Msl.LoadGML("gml_GlobalScript_scr_console_buff")
             .MatchFromUntil("function scr_console_buff()", "}")
             .ReplaceBy(ModFiles, "scr_console_buff.gml")
+            .Save();
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_allskills")
+            .MatchFromUntil("function scr_console_allskills()", "}")
+            .ReplaceBy(ModFiles, "scr_console_allskills.gml")
+            .Save();
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_spawn")
+            .MatchFromUntil("function scr_console_spawn()", "}")
+            .ReplaceBy(ModFiles, "scr_console_spawn.gml")
+            .Save();
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_getxp")
+            .MatchFromUntil("function scr_console_getxp()", "}")
+            .ReplaceBy(ModFiles, "scr_console_getxp.gml")
+            .Save();
+
+        Msl.LoadGML("gml_GlobalScript_scr_console_nocd")
+            .MatchFromUntil("function scr_console_nocd()", "}")
+            .ReplaceBy(ModFiles, "scr_console_nocd.gml")
             .Save();
     }
 
