@@ -118,6 +118,9 @@ public class DevTools : Mod
         // scr_console_time_process), so it cannot be GML-patched. The implementation
         // is added under a new name instead; the vanilla stub stays untouched.
         Msl.AddFunction(ModFiles.GetCode("scr_console_time_change.gml"), "scr_devtools_time_change");
+        // Its help text has the same problem (it lives in that same entry), so it
+        // is provided standalone too - the commands map points `time` at it.
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_time_help.gml"), "scr_devtools_time_help");
 
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.
@@ -159,6 +162,42 @@ public class DevTools : Mod
             .MatchFromUntil("function scr_console_clear()", "__dsDebuggerListClear(output_list)\n}")
             .ReplaceBy(ModFiles, "scr_console_clear.gml")
             .Save();
+
+        // Vanilla help text is Russian-only (the *_help functions sitting in
+        // the same files, inherited from the 0.8.x era). Each is replaced with
+        // a language-aware body reading global.language (1=ru, 2=en, 3=zh)
+        // and returning Russian, Chinese, or English rows - English falls
+        // back for every other language. The game's font pipeline already
+        // switches global.f_dmg per language (scr_fontsUpdate), so no
+        // rendering change is needed. NOTE: run AFTER the command-body
+        // patches above - both anchor in the same code entries, and the
+        // *_help function text is preserved by those patches.
+        foreach ((string codeEntry, string helpFunc, string fileName) in new (string, string, string)[]
+        {
+            ("scr_console_help", "scr_console_help_help", "scr_console_help_help.gml"),
+            ("scr_console_clear", "scr_console_clear_help", "scr_console_clear_help.gml"),
+            ("scr_console_godmode", "scr_console_godmode_help", "scr_console_godmode_help.gml"),
+            ("scr_console_nocd", "scr_console_nocd_help", "scr_console_nocd_help.gml"),
+            ("scr_console_getxp", "scr_console_getxp_help", "scr_console_getxp_help.gml"),
+            ("scr_console_spawn", "scr_console_spawn_help", "scr_console_spawn_help.gml"),
+            ("scr_console_drop", "scr_console_drop_help", "scr_console_drop_help.gml"),
+            ("scr_console_buff", "scr_console_buff_help", "scr_console_buff_help.gml"),
+            ("scr_console_allskills", "scr_console_allskills_help", "scr_console_allskills_help.gml"),
+            ("scr_console_save", "scr_console_save_help", "scr_console_save_help.gml"),
+            ("scr_console_room", "scr_console_room_help", "scr_console_room_help.gml"),
+            ("scr_console_killboss", "scr_console_killboss_help", "scr_console_killboss_help.gml"),
+            ("scr_console_globalset", "scr_console_globalset_help", "scr_console_globalset_help.gml"),
+            // the vanilla file is named after minimap_visible but its help
+            // function is scr_console_map_help (different stem)
+            ("scr_console_minimap_visible", "scr_console_map_help", "scr_console_map_help.gml"),
+            ("scr_console_debugmap", "scr_console_debugmap_help", "scr_console_debugmap_help.gml"),
+        })
+        {
+            Msl.LoadGML($"gml_GlobalScript_{codeEntry}")
+                .MatchFromUntil($"function {helpFunc}()", "}")
+                .ReplaceBy(ModFiles, fileName)
+                .Save();
+        }
     }
 
     private void DebugPatching()

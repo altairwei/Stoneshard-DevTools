@@ -41,7 +41,9 @@ function scr_devconsole_commands_map()
     ds_map_add(_commandsMap,"killboss", "scr_console_killboss");
     ds_map_add(_helpMap,"killboss", "scr_console_killboss_help");
     ds_map_add(_commandsMap,"time", "scr_devtools_time_change");
-    ds_map_add(_helpMap,"time", "scr_console_time_help");
+    // time's vanilla help lives in scr_console_time_change, an entry the MSL
+    // decompiler cannot touch (modern syntax) - standalone multi-language help.
+    ds_map_add(_helpMap,"time", "scr_devtools_time_help");
     ds_map_add(_commandsMap,"map", "scr_console_minimap_visible");
     ds_map_add(_helpMap,"map", "scr_console_map_help");
     ds_map_add(_commandsMap,"debugmap", "scr_console_debugmap");
