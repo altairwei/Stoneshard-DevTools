@@ -1,33 +1,16 @@
-.localvar 2 arguments
+function scr_console_output_list()
+{
+    // positional arguments come in through argument[0]/argument[1] - the old
+    // compiler does not support named parameters in declarations.
+    // DevTools console output pipeline: appends to the o_devconsole
+    // instance's ds_lists. Every caller sits on the command chain
+    // (Step -> scr_devconsole_execute -> scr_devconsole_command ->
+    // command script -> here) or in a console event, where self is always
+    // the o_devconsole instance.
+    ds_list_add(output_list, string(argument[0]));
+    ds_list_add(color_list, argument[1]);
 
-:[0]
-b [2]
-
-> gml_Script_scr_console_output_list (locals=0, argc=2)
-:[1]
-pushi.e -15
-pushi.e 0
-push.v [array]self.argument
-push.v self.output_list
-call.i ds_list_add(argc=2)
-popz.v
-pushi.e -15
-pushi.e 1
-push.v [array]self.argument
-push.v self.color_list
-call.i ds_list_add(argc=2)
-popz.v
-exit.i
-
-:[2]
-push.i gml_Script_scr_console_output_list
-conv.i.v
-pushi.e -1
-conv.i.v
-call.i method(argc=2)
-dup.v 0
-pushi.e -1
-pop.v.v [stacktop]self.scr_console_output_list
-popz.v
-
-:[end]
+    // keep the DevTools log pipeline
+    if (variable_global_exists("_msl_log"))
+        scr_msl_log(string(argument[0]));
+}

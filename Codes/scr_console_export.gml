@@ -21,7 +21,9 @@ function scr_console_export()
         return;
     }
 
-    var _file_name = get_save_filename("*", _table_name)
+    // get_save_filename_ext is the 4-arg variant - plain get_save_filename is
+    // absent from the game's function table and miscompiles under MSL's UTMT.
+    var _file_name = get_save_filename_ext("*", _table_name, "", "Export table")
     var _file = file_text_open_write(_file_name)
 
     if (_file == -1)
@@ -37,9 +39,10 @@ function scr_console_export()
         var _line = _array[i]
         var _record = string_split(_line, ";")
         file_text_write_string(_file, string_join_ext(_delimiter, _record))
-        file_text_writeln(_file)
+        // file_text_writeln is absent from the game function table
+        file_text_write_string(_file, "\r\n")
     }
 
     file_text_close(_file)
-    scr_console_output_list(string_concat(_table_name, " has been saved to ", _file_name), green)
+    scr_console_output_list(_table_name + " has been saved to " + _file_name, green)
 }

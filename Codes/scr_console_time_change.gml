@@ -1,4 +1,8 @@
-function scr_console_time_change()
+// Renamed from scr_console_time_change: the vanilla code entry cannot be
+// decompiled by MSL's bundled UTMT (contains a nested closure / `new` / `??`),
+// so it cannot be GML-patched. Added as a new function instead; the commands
+// map points `time` at this name.
+function scr_devtools_time_change()
 {
     var _argumentsArray = argument[0]
     var _argumentsArrayLength = array_length(_argumentsArray)

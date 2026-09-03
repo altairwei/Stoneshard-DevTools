@@ -222,7 +222,7 @@ function scr_console_spawn()
     if (!_unit)
     {
         var _unitsArray = global.enemy_balance_csv
-        var _unitsArrayHeight = array_height_2d(_unitsArray)
+        var _unitsArrayHeight = array_length(_unitsArray)
         var _unitNameTable = string_replace_all(_unitName, "_", " ")
         var _i = 0
         while (_i < _unitsArrayHeight)
