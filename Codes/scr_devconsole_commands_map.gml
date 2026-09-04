@@ -96,4 +96,30 @@ function scr_devconsole_commands_map()
     ds_map_add(_helpMap,"find", "scr_console_find_help");
     ds_map_add(_commandsMap,"exit", "scr_devtools_exit");
     ds_map_add(_helpMap,"exit", "scr_console_exit_help");
+    // Batch-3 NeoConsole ports: world/state/cleanup commands. Eight body
+    // patches on vanilla stubs - tp, nodeath, setrep, inj, setcaravan,
+    // getobjectname and killall in the loop below, load in its own special
+    // case (parameter in signature) - plus one standalone implementation
+    // (butcher); help is trilingual in all cases - the five in-file *_help
+    // functions are patched in place, the four standalone ones are AddFunction.
+    ds_map_add(_commandsMap,"tp", "scr_console_tp");
+    ds_map_add(_helpMap,"tp", "scr_console_tp_help");
+    ds_map_add(_commandsMap,"load", "scr_console_load");
+    ds_map_add(_helpMap,"load", "scr_console_load_help");
+    ds_map_add(_commandsMap,"nodeath", "scr_console_nodeathmode");
+    ds_map_add(_helpMap,"nodeath", "scr_console_nodeathmode_help");
+    ds_map_add(_commandsMap,"setrep", "scr_console_rep");
+    ds_map_add(_helpMap,"setrep", "scr_console_rep_help");
+    ds_map_add(_commandsMap,"inj", "scr_console_inj");
+    // the vanilla help function for inj is scr_console_limb_help (different
+    // stem, lives in the same file as the scr_console_inj stub)
+    ds_map_add(_helpMap,"inj", "scr_console_limb_help");
+    ds_map_add(_commandsMap,"setcaravan", "scr_console_setcaravan");
+    ds_map_add(_helpMap,"setcaravan", "scr_console_setcaravan_help");
+    ds_map_add(_commandsMap,"getobjname", "scr_console_getobjectname");
+    ds_map_add(_helpMap,"getobjname", "scr_console_getobjectname_help");
+    ds_map_add(_commandsMap,"butcher", "scr_devtools_butcher");
+    ds_map_add(_helpMap,"butcher", "scr_console_butcher_help");
+    ds_map_add(_commandsMap,"killall", "scr_console_killall");
+    ds_map_add(_helpMap,"killall", "scr_console_killall_help");
 }

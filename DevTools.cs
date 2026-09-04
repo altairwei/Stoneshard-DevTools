@@ -139,6 +139,16 @@ public class DevTools : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_console_find_help.gml"), "scr_console_find_help");
         Msl.AddFunction(ModFiles.GetCode("scr_console_exit_help.gml"), "scr_console_exit_help");
 
+        // Batch-3 NeoConsole ports that have no vanilla script at all: butcher
+        // is added under a new name. setcaravan/getobjectname/killall exist as
+        // empty vanilla stubs (body-patched below), so only their help is
+        // added here - same rule as the batches above.
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_butcher.gml"), "scr_devtools_butcher");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_butcher_help.gml"), "scr_console_butcher_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_setcaravan_help.gml"), "scr_console_setcaravan_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_getobjectname_help.gml"), "scr_console_getobjectname_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_killall_help.gml"), "scr_console_killall_help");
+
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.
         // The `until` anchor is the original function's last body line plus the
@@ -180,6 +190,17 @@ public class DevTools : Mod
             ("scr_console_weather_switch", "}", "scr_console_weather_switch.gml"),
             ("scr_console_boost", "}", "scr_console_boost.gml"),
             ("scr_console_getseed", "}", "scr_console_getseed.gml"),
+            // Batch-3 NeoConsole ports: world/state/cleanup. Seven of the
+            // vanilla bodies are empty stubs (their Russian *_help functions
+            // sit above them and are replaced separately below). load has a
+            // parameter in its signature and is patched on its own below.
+            ("scr_console_tp", "}", "scr_console_tp.gml"),
+            ("scr_console_nodeathmode", "}", "scr_console_nodeathmode.gml"),
+            ("scr_console_rep", "}", "scr_console_rep.gml"),
+            ("scr_console_inj", "}", "scr_console_inj.gml"),
+            ("scr_console_setcaravan", "}", "scr_console_setcaravan.gml"),
+            ("scr_console_getobjectname", "}", "scr_console_getobjectname.gml"),
+            ("scr_console_killall", "}", "scr_console_killall.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{script}")
@@ -193,6 +214,12 @@ public class DevTools : Mod
         Msl.LoadGML("gml_GlobalScript_scr_console_save")
             .MatchFromUntil("function scr_console_save(argument0)", "}")
             .ReplaceBy(ModFiles, "scr_console_save.gml")
+            .Save();
+
+        // load has the same parameter-in-signature quirk as save.
+        Msl.LoadGML("gml_GlobalScript_scr_console_load")
+            .MatchFromUntil("function scr_console_load(argument0)", "}")
+            .ReplaceBy(ModFiles, "scr_console_load.gml")
             .Save();
 
         // clear is implemented in vanilla but targets the removed old console
@@ -246,6 +273,13 @@ public class DevTools : Mod
             ("scr_console_weather_switch", "scr_console_weather_help", "scr_console_weather_help.gml"),
             ("scr_console_boost", "scr_console_boost_help", "scr_console_boost_help.gml"),
             ("scr_console_getseed", "scr_console_getseed_help", "scr_console_getseed_help.gml"),
+            // batch-3 NeoConsole ports; inj's in-file help function is named
+            // scr_console_limb_help (different stem from the command)
+            ("scr_console_tp", "scr_console_tp_help", "scr_console_tp_help.gml"),
+            ("scr_console_load", "scr_console_load_help", "scr_console_load_help.gml"),
+            ("scr_console_nodeathmode", "scr_console_nodeathmode_help", "scr_console_nodeathmode_help.gml"),
+            ("scr_console_rep", "scr_console_rep_help", "scr_console_rep_help.gml"),
+            ("scr_console_inj", "scr_console_limb_help", "scr_console_limb_help.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{codeEntry}")
