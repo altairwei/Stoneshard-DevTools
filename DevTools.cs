@@ -121,28 +121,48 @@ public class DevTools : Mod
         // Its help text has the same problem (it lives in that same entry), so it
         // is provided standalone too - the commands map points `time` at it.
         Msl.AddFunction(ModFiles.GetCode("scr_devtools_time_help.gml"), "scr_devtools_time_help");
+        // Batch-1 restored vanilla commands have no *_help function of their own,
+        // so their (trilingual) help is added standalone under the standard name.
+        Msl.AddFunction(ModFiles.GetCode("scr_console_getinstances_help.gml"), "scr_console_getinstances_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_getassetid_help.gml"), "scr_console_getassetid_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_actionslog_help.gml"), "scr_console_actionslog_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_questsettarget_help.gml"), "scr_console_questsettarget_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_questnexttarget_help.gml"), "scr_console_questnexttarget_help");
 
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.
-        foreach ((string script, string fileName) in new (string, string)[]
+        // The `until` anchor is the original function's last body line plus the
+        // closing brace - for stubs that is just "}"; the restored vanilla
+        // commands (getinstances/getassetid/actionslog/questsettarget/
+        // questnexttarget/getroomlist) have real bodies, so their anchor is the
+        // original final output line + the column-0 closing brace.
+        foreach ((string script, string until, string fileName) in new (string, string, string)[]
         {
-            ("scr_console_help", "scr_console_help.gml"),
-            ("scr_console_drop", "scr_console_drop.gml"),
-            ("scr_console_globalset", "scr_console_globalset.gml"),
-            ("scr_console_minimap_visible", "scr_console_minimap_visible.gml"),
-            ("scr_console_debugmap", "scr_console_debugmap.gml"),
-            ("scr_console_room", "scr_console_room.gml"),
-            ("scr_console_buff", "scr_console_buff.gml"),
-            ("scr_console_allskills", "scr_console_allskills.gml"),
-            ("scr_console_godmode", "scr_console_godmode.gml"),
-            ("scr_console_spawn", "scr_console_spawn.gml"),
-            ("scr_console_getxp", "scr_console_getxp.gml"),
-            ("scr_console_nocd", "scr_console_nocd.gml"),
-            ("scr_console_killboss", "scr_console_killboss.gml"),
+            ("scr_console_help", "}", "scr_console_help.gml"),
+            ("scr_console_drop", "}", "scr_console_drop.gml"),
+            ("scr_console_globalset", "}", "scr_console_globalset.gml"),
+            ("scr_console_minimap_visible", "}", "scr_console_minimap_visible.gml"),
+            ("scr_console_debugmap", "}", "scr_console_debugmap.gml"),
+            ("scr_console_room", "}", "scr_console_room.gml"),
+            ("scr_console_buff", "}", "scr_console_buff.gml"),
+            ("scr_console_allskills", "}", "scr_console_allskills.gml"),
+            ("scr_console_godmode", "}", "scr_console_godmode.gml"),
+            ("scr_console_spawn", "}", "scr_console_spawn.gml"),
+            ("scr_console_getxp", "}", "scr_console_getxp.gml"),
+            ("scr_console_nocd", "}", "scr_console_nocd.gml"),
+            ("scr_console_killboss", "}", "scr_console_killboss.gml"),
+            ("scr_console_getinstances", "\"Parent object not found\", red)\n}", "scr_console_getinstances.gml"),
+            ("scr_console_getassetid", "\"Invalid name\", red)\n}", "scr_console_getassetid.gml"),
+            // braced else block: also consume its indented close brace
+            ("scr_console_actionslog", "\"ActionsLog is visible\", green)\n    }\n}", "scr_console_actionslog.gml"),
+            ("scr_console_questsettarget", "\"Quest's data incorrect\", red)\n}", "scr_console_questsettarget.gml"),
+            ("scr_console_questnexttarget", "\"Quest's key not found\", red)\n}", "scr_console_questnexttarget.gml"),
+            // "red)" is unique to the braced else branch of this vanilla file
+            ("scr_console_getroomlist", "red)\n    }\n}", "scr_console_getroomlist.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{script}")
-                .MatchFromUntil($"function {script}()", "}")
+                .MatchFromUntil($"function {script}()", until)
                 .ReplaceBy(ModFiles, fileName)
                 .Save();
         }
@@ -191,6 +211,9 @@ public class DevTools : Mod
             // function is scr_console_map_help (different stem)
             ("scr_console_minimap_visible", "scr_console_map_help", "scr_console_map_help.gml"),
             ("scr_console_debugmap", "scr_console_debugmap_help", "scr_console_debugmap_help.gml"),
+            // restored command; its Russian-only *_help function lives in the
+            // same vanilla file, right before the command body
+            ("scr_console_getroomlist", "scr_console_getroomlist_help", "scr_console_getroomlist_help.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{codeEntry}")

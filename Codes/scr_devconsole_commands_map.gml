@@ -3,7 +3,7 @@
 // runtime via asset_get_index (see scr_devconsole_command) - the
 // value-position bare-name pitfall (miscompiled into an instance-variable
 // read) does not apply to strings.
-// - help/clear and the 13 vanilla command bodies are GML-patched stubs
+// - the vanilla-stub commands and the vanilla-restored ones are GML-patched
 // - respec/export/dialog (+ their _help) and the JSON helpers are AddFunction
 // - time lives under a new name: the vanilla entry crashes the decompiler
 // argument[0]: command name -> implementation script name
@@ -56,4 +56,18 @@ function scr_devconsole_commands_map()
     ds_map_add(_helpMap,"export", "scr_console_export_help");
     ds_map_add(_commandsMap,"dialog", "scr_console_dialog");
     ds_map_add(_helpMap,"dialog", "scr_console_dialog_help");
+    // vanilla-restored commands; their help is standalone (added via AddFunction,
+    // except getroomlist's, which shares the vanilla file with its command)
+    ds_map_add(_commandsMap,"getinstances", "scr_console_getinstances");
+    ds_map_add(_helpMap,"getinstances", "scr_console_getinstances_help");
+    ds_map_add(_commandsMap,"getroomlist", "scr_console_getroomlist");
+    ds_map_add(_helpMap,"getroomlist", "scr_console_getroomlist_help");
+    ds_map_add(_commandsMap,"getassetid", "scr_console_getassetid");
+    ds_map_add(_helpMap,"getassetid", "scr_console_getassetid_help");
+    ds_map_add(_commandsMap,"actionslog", "scr_console_actionslog");
+    ds_map_add(_helpMap,"actionslog", "scr_console_actionslog_help");
+    ds_map_add(_commandsMap,"questsettarget", "scr_console_questsettarget");
+    ds_map_add(_helpMap,"questsettarget", "scr_console_questsettarget_help");
+    ds_map_add(_commandsMap,"questnexttarget", "scr_console_questnexttarget");
+    ds_map_add(_helpMap,"questnexttarget", "scr_console_questnexttarget_help");
 }
