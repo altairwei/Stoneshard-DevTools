@@ -177,8 +177,11 @@ public class DevTools : Mod
             ("scr_console_actionslog", "\"ActionsLog is visible\", green)\n    }\n}", "scr_console_actionslog.gml"),
             ("scr_console_questsettarget", "\"Quest's data incorrect\", red)\n}", "scr_console_questsettarget.gml"),
             ("scr_console_questnexttarget", "\"Quest's key not found\", red)\n}", "scr_console_questnexttarget.gml"),
-            // "red)" is unique to the braced else branch of this vanilla file
-            ("scr_console_getroomlist", "red)\n    }\n}", "scr_console_getroomlist.gml"),
+            // the vanilla else ends with an explicit "return;" line before its
+            // two closing braces - swallow it all so nothing survives the
+            // replacement (a shorter anchor leaves the tail as an orphan and
+            // the pack compile fails with "Malformed assignment statement")
+            ("scr_console_getroomlist", "red)\n        return;\n    }\n}", "scr_console_getroomlist.gml"),
             // Batch-2 NeoConsole ports: the vanilla 0.9.4.25 bodies are stubs,
             // each with its Russian *_help function sitting above (kept intact
             // here, replaced separately below)
