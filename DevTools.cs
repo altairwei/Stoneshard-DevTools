@@ -129,6 +129,16 @@ public class DevTools : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_console_questsettarget_help.gml"), "scr_console_questsettarget_help");
         Msl.AddFunction(ModFiles.GetCode("scr_console_questnexttarget_help.gml"), "scr_console_questnexttarget_help");
 
+        // Batch-2 NeoConsole ports that have no vanilla script at all: gold, find
+        // and exit are added under new names (their trilingual help follows the
+        // same rule as the batch-1 restored commands above).
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_gold.gml"), "scr_devtools_gold");
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_find.gml"), "scr_devtools_find");
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_exit.gml"), "scr_devtools_exit");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_gold_help.gml"), "scr_console_gold_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_find_help.gml"), "scr_console_find_help");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_exit_help.gml"), "scr_console_exit_help");
+
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.
         // The `until` anchor is the original function's last body line plus the
@@ -159,6 +169,17 @@ public class DevTools : Mod
             ("scr_console_questnexttarget", "\"Quest's key not found\", red)\n}", "scr_console_questnexttarget.gml"),
             // "red)" is unique to the braced else branch of this vanilla file
             ("scr_console_getroomlist", "red)\n    }\n}", "scr_console_getroomlist.gml"),
+            // Batch-2 NeoConsole ports: the vanilla 0.9.4.25 bodies are stubs,
+            // each with its Russian *_help function sitting above (kept intact
+            // here, replaced separately below)
+            ("scr_console_sethp", "}", "scr_console_sethp.gml"),
+            ("scr_console_setmp", "}", "scr_console_setmp.gml"),
+            ("scr_console_atr_set", "}", "scr_console_atr_set.gml"),
+            ("scr_console_lvl", "}", "scr_console_lvl.gml"),
+            ("scr_console_change", "}", "scr_console_change.gml"),
+            ("scr_console_weather_switch", "}", "scr_console_weather_switch.gml"),
+            ("scr_console_boost", "}", "scr_console_boost.gml"),
+            ("scr_console_getseed", "}", "scr_console_getseed.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{script}")
@@ -214,6 +235,17 @@ public class DevTools : Mod
             // restored command; its Russian-only *_help function lives in the
             // same vanilla file, right before the command body
             ("scr_console_getroomlist", "scr_console_getroomlist_help", "scr_console_getroomlist_help.gml"),
+            // batch-2 NeoConsole ports; three of the help function names differ
+            // from their file stems (attr_help inside atr_set, condition_help
+            // inside change, weather_help inside weather_switch)
+            ("scr_console_sethp", "scr_console_sethp_help", "scr_console_sethp_help.gml"),
+            ("scr_console_setmp", "scr_console_setmp_help", "scr_console_setmp_help.gml"),
+            ("scr_console_atr_set", "scr_console_attr_help", "scr_console_attr_help.gml"),
+            ("scr_console_lvl", "scr_console_lvl_help", "scr_console_lvl_help.gml"),
+            ("scr_console_change", "scr_console_condition_help", "scr_console_condition_help.gml"),
+            ("scr_console_weather_switch", "scr_console_weather_help", "scr_console_weather_help.gml"),
+            ("scr_console_boost", "scr_console_boost_help", "scr_console_boost_help.gml"),
+            ("scr_console_getseed", "scr_console_getseed_help", "scr_console_getseed_help.gml"),
         })
         {
             Msl.LoadGML($"gml_GlobalScript_{codeEntry}")

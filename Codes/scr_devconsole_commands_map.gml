@@ -70,4 +70,30 @@ function scr_devconsole_commands_map()
     ds_map_add(_helpMap,"questsettarget", "scr_console_questsettarget_help");
     ds_map_add(_commandsMap,"questnexttarget", "scr_console_questnexttarget");
     ds_map_add(_helpMap,"questnexttarget", "scr_console_questnexttarget_help");
+    // NeoConsole ports; eight body patches on vanilla stubs + three standalone
+    // implementations (gold/find/exit). Help is trilingual in all cases - the
+    // eight vanilla *-patched entries carry their in-file *_help functions,
+    // the three standalone ones are AddFunction.
+    ds_map_add(_commandsMap,"sethp", "scr_console_sethp");
+    ds_map_add(_helpMap,"sethp", "scr_console_sethp_help");
+    ds_map_add(_commandsMap,"setmp", "scr_console_setmp");
+    ds_map_add(_helpMap,"setmp", "scr_console_setmp_help");
+    ds_map_add(_commandsMap,"setatr", "scr_console_atr_set");
+    ds_map_add(_helpMap,"setatr", "scr_console_attr_help");
+    ds_map_add(_commandsMap,"setlvl", "scr_console_lvl");
+    ds_map_add(_helpMap,"setlvl", "scr_console_lvl_help");
+    ds_map_add(_commandsMap,"gold", "scr_devtools_gold");
+    ds_map_add(_helpMap,"gold", "scr_console_gold_help");
+    ds_map_add(_commandsMap,"setcondition", "scr_console_change");
+    ds_map_add(_helpMap,"setcondition", "scr_console_condition_help");
+    ds_map_add(_commandsMap,"weather", "scr_console_weather_switch");
+    ds_map_add(_helpMap,"weather", "scr_console_weather_help");
+    ds_map_add(_commandsMap,"boost", "scr_console_boost");
+    ds_map_add(_helpMap,"boost", "scr_console_boost_help");
+    ds_map_add(_commandsMap,"getseed", "scr_console_getseed");
+    ds_map_add(_helpMap,"getseed", "scr_console_getseed_help");
+    ds_map_add(_commandsMap,"find", "scr_devtools_find");
+    ds_map_add(_helpMap,"find", "scr_console_find_help");
+    ds_map_add(_commandsMap,"exit", "scr_devtools_exit");
+    ds_map_add(_helpMap,"exit", "scr_console_exit_help");
 }
