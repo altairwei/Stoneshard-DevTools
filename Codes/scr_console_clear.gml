@@ -11,4 +11,5 @@ function scr_console_clear()
     // self is the o_devconsole instance along the whole command chain
     ds_list_clear(output_list);
     ds_list_clear(color_list);
+    scroll = 0;
 }
