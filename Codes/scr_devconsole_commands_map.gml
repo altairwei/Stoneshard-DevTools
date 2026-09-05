@@ -122,4 +122,8 @@ function scr_devconsole_commands_map()
     ds_map_add(_helpMap,"butcher", "scr_console_butcher_help");
     ds_map_add(_commandsMap,"killall", "scr_console_killall");
     ds_map_add(_helpMap,"killall", "scr_console_killall_help");
+    // DevTools self-service: rebuilds both maps at runtime exactly as the
+    // Create event does (drops stray entries, re-adds every registered one)
+    ds_map_add(_commandsMap,"refresh", "scr_devtools_refresh");
+    ds_map_add(_helpMap,"refresh", "scr_console_refresh_help");
 }

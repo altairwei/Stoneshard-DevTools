@@ -149,6 +149,13 @@ public class DevTools : Mod
         Msl.AddFunction(ModFiles.GetCode("scr_console_getobjectname_help.gml"), "scr_console_getobjectname_help");
         Msl.AddFunction(ModFiles.GetCode("scr_console_killall_help.gml"), "scr_console_killall_help");
 
+        // DevTools self-service: `refresh` rebuilds the command maps at
+        // runtime the same way the Create event does. Its body calls
+        // scr_devconsole_commands_map by its bare name, so it must register
+        // after that builder (registered above).
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_refresh.gml"), "scr_devtools_refresh");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_refresh_help.gml"), "scr_console_refresh_help");
+
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.
         // The `until` anchor is the original function's last body line plus the
