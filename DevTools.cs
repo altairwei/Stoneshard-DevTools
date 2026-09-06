@@ -5,6 +5,14 @@
 // NOTE: no XML doc (///) comments in this file - MSL's pack compilation
 // fails on them with CS1569. If System.IO is ever needed again, add the
 // using explicitly: MSL's pack-time compiler has no ImplicitUsings.
+
+// Codes/ layout (since 2026-09-06): semantic subdirectories - Event/
+// (o_devconsole events), Core/ (devconsole infrastructure + output pipeline),
+// Commands/ (command implementations), Help/ (trilingual help), Support/
+// (json helpers). The GetCode/ReplaceBy references below stay FLAT leaf
+// names: MSL resolves them across the whole Codes/ tree, so leaf names must
+// stay unique. Asset names are decided by AddFunction's second argument,
+// not by file name (see scr_console_time_change.gml).
 using ModShardLauncher;
 using ModShardLauncher.Mods;
 using UndertaleModLib.Models;
