@@ -20,12 +20,21 @@
 if (!global.consoleEnabled)
     exit;
 var GAP = 50;
-var _resolutionDataArray = scr_cameraResolutionGet();
-var _width = _resolutionDataArray[0];
-var _height = _resolutionDataArray[1];
-var _scale = _resolutionDataArray[2];
-var _offsetX = global.gameframe_offset_left * _scale;
-var _offsetY = global.gameframe_offset_top * _scale;
+// full-window geometry, official neoconsole basis (Draw_64:14-27): the GUI
+// layer reports the camera-resolution preset size, which can be smaller
+// than the actual window/display. Keyed off global.displayMode exactly like
+// the official console - NOT off window_get_fullscreen()/gameframe flags,
+// which are transient (gameframe's Win-key maximize/restore handling flips
+// them, e.g. when IME switching presses Win+Space, shrinking the console).
+var _width = display_get_gui_width();
+var _height = display_get_gui_height();
+if (global.displayMode == "fullscreenBorderless" || global.displayMode == "fullscreenExclusive")
+{
+    _width = global.window_width;
+    _height = global.window_height;
+}
+var _offsetX = global.gameframe_offset_left * global.cameraScale;
+var _offsetY = global.gameframe_offset_top * global.cameraScale;
 var _xx = GAP + _offsetX;
 var _yy = (_height - GAP) + _offsetY;
 var _sbRight = _width + _offsetX - GAP;

@@ -198,14 +198,23 @@ if (keyboard_check_pressed(vk_escape) && autocomplete_active)
 // ---- scrollback: mouse wheel / PgUp / PgDn / right-edge bar drag ----
 // (neoconsole fullview port; Up/Down stay command history, no conflict)
 var GAP = 50;
-var _resolutionArray = scr_cameraResolutionGet();
-var _scrollScale = _resolutionArray[2];
-var _scrollOffsetX = global.gameframe_offset_left * _scrollScale;
-var _scrollOffsetY = global.gameframe_offset_top * _scrollScale;
-var _sbRight = _resolutionArray[0] + _scrollOffsetX - GAP;
+// full-window geometry, same basis as the DrawGUI event (see there): the
+// GUI layer reports the camera-resolution preset size, which can be smaller
+// than the actual window/display - keyed off global.displayMode like the
+// official console (window_get_fullscreen()/gameframe flags are transient)
+var _scrollWidth = display_get_gui_width();
+var _scrollHeight = display_get_gui_height();
+if (global.displayMode == "fullscreenBorderless" || global.displayMode == "fullscreenExclusive")
+{
+    _scrollWidth = global.window_width;
+    _scrollHeight = global.window_height;
+}
+var _scrollOffsetX = global.gameframe_offset_left * global.cameraScale;
+var _scrollOffsetY = global.gameframe_offset_top * global.cameraScale;
+var _sbRight = _scrollWidth + _scrollOffsetX - GAP;
 var _sbWidth = 12;
 var _sbTrackY1 = GAP + _scrollOffsetY;
-var _sbTrackY2 = (_resolutionArray[1] - GAP) + _scrollOffsetY;
+var _sbTrackY2 = (_scrollHeight - GAP) + _scrollOffsetY;
 var _scrollMax = max(0, ds_list_size(output_list) - min_scroll_requirement);
 if (scroll < 0)
     scroll = 0;
