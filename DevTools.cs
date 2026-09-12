@@ -163,6 +163,10 @@ public class DevTools : Mod
         // after that builder (registered above).
         Msl.AddFunction(ModFiles.GetCode("scr_devtools_refresh.gml"), "scr_devtools_refresh");
         Msl.AddFunction(ModFiles.GetCode("scr_console_refresh_help.gml"), "scr_console_refresh_help");
+        // `locations` lists the global-map locations `globalset <location>`
+        // can teleport to (read live from global.locationMapName).
+        Msl.AddFunction(ModFiles.GetCode("scr_devtools_locations.gml"), "scr_devtools_locations");
+        Msl.AddFunction(ModFiles.GetCode("scr_console_locations_help.gml"), "scr_console_locations_help");
 
         // Vanilla command bodies are empty stubs: fill them with the DevTools
         // implementations. The vanilla scr_console_*_help functions stay untouched.

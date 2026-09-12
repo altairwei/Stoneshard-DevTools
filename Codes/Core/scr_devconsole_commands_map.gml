@@ -126,4 +126,7 @@ function scr_devconsole_commands_map()
     // Create event does (drops stray entries, re-adds every registered one)
     ds_map_add(_commandsMap,"refresh", "scr_devtools_refresh");
     ds_map_add(_helpMap,"refresh", "scr_console_refresh_help");
+    // lists the global-map locations globalset can teleport to
+    ds_map_add(_commandsMap,"locations", "scr_devtools_locations");
+    ds_map_add(_helpMap,"locations", "scr_console_locations_help");
 }
