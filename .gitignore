@@ -7,6 +7,7 @@
 obj
 bin
 tmp
+.tools
 
 # local Claude Code project skills/config - not part of the mod repo
 .claude/
