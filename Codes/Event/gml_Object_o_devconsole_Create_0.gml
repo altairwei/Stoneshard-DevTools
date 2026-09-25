@@ -33,3 +33,5 @@ autocomplete_index = -1;
 scr_devconsole_commands_map(commandsMap, helpMap);
 scr_console_output_list("[DevTools] " + string(ds_map_size(commandsMap)) + " commands loaded.", gray);
 scr_console_output_list("[DevTools] F2 toggles, Tab autocompletes, Up/Down recalls history, wheel/PgUp scrolls.", gray);
+// MCP server: its state, then listen on 127.0.0.1:8765 - see scr_devtools_mcp_init
+scr_devtools_mcp_init();

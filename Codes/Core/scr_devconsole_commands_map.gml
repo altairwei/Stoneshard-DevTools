@@ -129,4 +129,7 @@ function scr_devconsole_commands_map()
     // lists the global-map locations globalset can teleport to
     ds_map_add(_commandsMap,"locations", "scr_devtools_locations");
     ds_map_add(_helpMap,"locations", "scr_console_locations_help");
+    // built-in MCP server control: status, start, stop
+    ds_map_add(_commandsMap,"mcp", "scr_devtools_mcp");
+    ds_map_add(_helpMap,"mcp", "scr_console_mcp_help");
 }

@@ -9,10 +9,10 @@
 // Codes/ layout (since 2026-09-06): semantic subdirectories - Event/
 // (o_devconsole events), Core/ (devconsole infrastructure + output pipeline),
 // Commands/ (command implementations), Help/ (trilingual help), Support/
-// (json helpers). The GetCode/ReplaceBy references below stay FLAT leaf
-// names: MSL resolves them across the whole Codes/ tree, so leaf names must
-// stay unique. Asset names are decided by AddFunction's second argument,
-// not by file name (see scr_console_time_change.gml).
+// (json helpers), Mcp/ (MCP server). The GetCode/ReplaceBy references below
+// stay FLAT leaf names: MSL resolves them across the whole Codes/ tree, so
+// leaf names must stay unique. Asset names are decided by AddFunction's
+// second argument, not by file name (see scr_console_time_change.gml).
 using ModShardLauncher;
 using ModShardLauncher.Mods;
 using UndertaleModLib.Models;
@@ -39,6 +39,10 @@ public class DevTools : Mod
 
         // Table export is handled in-game by the `export` console command.
         PatchCommands();
+        // After PatchCommands: the MCP scripts call scr_devconsole_execute and
+        // scr_devtools_json_escape by bare name. Before EnableDevConsole: its
+        // event code calls the MCP scripts by bare name.
+        PatchMcp();
         EnableDevConsole();
     }
 
@@ -61,7 +65,7 @@ public class DevTools : Mod
     //    runtime via asset_get_index: bare function names in value position
     //    get miscompiled into instance-variable reads by the old compiler.
     //  - Event GML calls the AddFunction scripts by their bare names, so all
-    //    AddFunction calls (PatchCommands) must run BEFORE these
+    //    AddFunction calls (PatchCommands, PatchMcp) must run BEFORE these
     //    AddNewEvent calls, which compile the event code.
     private void EnableDevConsole()
     {
@@ -84,6 +88,11 @@ public class DevTools : Mod
         Msl.AddNewEvent("o_devconsole", ModFiles.GetCode("gml_Object_o_devconsole_Step_0.gml"), EventType.Step, 0);
         // Draw event subtype 64 = DrawGUI (the *_64.gml naming convention).
         Msl.AddNewEvent("o_devconsole", ModFiles.GetCode("gml_Object_o_devconsole_DrawGUI_0.gml"), EventType.Draw, 64);
+        // Other 68 = Async Networking: MCP server socket events.
+        Msl.AddNewEvent("o_devconsole", ModFiles.GetCode("gml_Object_o_devconsole_AsyncNetworking_0.gml"), EventType.Other, 68);
+        // Draw 75 = Draw GUI End: MCP screenshots, taken once the frame is
+        // fully rendered.
+        Msl.AddNewEvent("o_devconsole", ModFiles.GetCode("gml_Object_o_devconsole_DrawGUIEnd_0.gml"), EventType.Draw, 75);
 
         // Nothing in vanilla creates the console; hook its creation next to
         // the render controller. NOTE: the bundled decompiler emits no
@@ -308,6 +317,58 @@ public class DevTools : Mod
                 .MatchFromUntil($"function {helpFunc}()", "}")
                 .ReplaceBy(ModFiles, fileName)
                 .Save();
+        }
+    }
+
+    // MCP server (Codes/Mcp/): a Streamable HTTP endpoint on
+    // http://127.0.0.1:8765/mcp, hosted by o_devconsole in pure GML - raw TCP
+    // sockets from the Async Networking event, HTTP/1.1 and JSON-RPC parsing,
+    // and tools that run console commands and take screenshots. The network_*
+    // builtins the game never calls get forged function-table entries at
+    // build time, like the Multiplayer mod's o_webchannel. Registered in
+    // dependency order: the old compiler resolves bare function names when
+    // each script compiles, so every callee comes before its callers.
+    private void PatchMcp()
+    {
+        foreach (string name in new[]
+        {
+            // leaf helpers
+            "scr_devtools_mcp_trim",
+            "scr_devtools_mcp_uint",
+            "scr_devtools_mcp_json_str",
+            "scr_devtools_mcp_json_id",
+            // connection bookkeeping and HTTP replies
+            "scr_devtools_mcp_drop",
+            "scr_devtools_mcp_send",
+            "scr_devtools_mcp_send_text",
+            "scr_devtools_mcp_consume",
+            "scr_devtools_mcp_fail",
+            "scr_devtools_mcp_reply",
+            "scr_devtools_mcp_reply_error",
+            "scr_devtools_mcp_tool_reply",
+            "scr_devtools_mcp_is_local",
+            // tools, JSON-RPC dispatch, HTTP parser
+            "scr_devtools_mcp_base64",
+            "scr_devtools_mcp_console_execute",
+            "scr_devtools_mcp_console_read",
+            "scr_devtools_mcp_tools_list",
+            "scr_devtools_mcp_tools_call",
+            "scr_devtools_mcp_rpc",
+            "scr_devtools_mcp_http",
+            // entry points called from the o_devconsole events
+            "scr_devtools_mcp_screenshot",
+            "scr_devtools_mcp_network",
+            "scr_devtools_mcp_stop",
+            "scr_devtools_mcp_start",
+            "scr_devtools_mcp_tick",
+            "scr_devtools_mcp_init",
+            "scr_devtools_mcp_cleanup",
+            // the `mcp` console command and its trilingual help
+            "scr_devtools_mcp",
+            "scr_console_mcp_help",
+        })
+        {
+            Msl.AddFunction(ModFiles.GetCode(name + ".gml"), name);
         }
     }
 

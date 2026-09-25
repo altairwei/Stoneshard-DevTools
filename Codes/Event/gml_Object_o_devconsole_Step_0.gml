@@ -21,6 +21,10 @@ if (keyboard_check_pressed(vk_f2))
     scroll_hover_active = false;
 }
 
+// MCP server housekeeping - deferred mcp start/stop, screenshot timeout.
+// Runs every step, so it sits before the console-closed early exit.
+scr_devtools_mcp_tick();
+
 if (!global.consoleEnabled)
     exit;
 
