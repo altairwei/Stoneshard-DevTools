@@ -49,4 +49,8 @@ function scr_devtools_gold()
         }
     }
     scr_console_output_list(("Added " + string(_amount) + " gold to player's inventory"), green)
+    // The inventory panel reads o_player.gold, recomputed only by paths that
+    // call scr_gold_count() (trade, dialogue, loot, ...). Recount now so the
+    // panel shows the new total right away instead of after the next trade.
+    scr_gold_count()
 }
