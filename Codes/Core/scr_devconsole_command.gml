@@ -4,6 +4,9 @@
 // (miscompiled into an instance-variable read) does not apply to strings.
 // self stays the o_devconsole instance across script_execute, so commands
 // can keep reading white/red/green/gray and calling scr_console_output_list.
+// Without a loaded game - on the main menu, which hosts the console too -
+// only the commands listed below run: the others touch the game world and
+// would stop on a GML error, whose modal dialog freezes the game.
 // NOTE: the old compiler does not support named parameters in declarations -
 // read positional arguments via argument[0].
 function scr_devconsole_command()
@@ -26,6 +29,8 @@ function scr_devconsole_command()
     scr_console_output_list(_commandLine, white);
     if (is_undefined(_scriptName))
         scr_console_output_list("Command '" + _command + "' not found, use 'help'", red);
+    else if (!instance_exists(o_player) && string_pos("|" + _command + "|", "|help|clear|find|refresh|mcp|exit|export|getassetid|getinstances|getroomlist|load|locations|") == 0)
+        scr_console_output_list("'" + _command + "' needs a loaded game - load a save first", red);
     else
         script_execute(asset_get_index(_scriptName), _argumentsArray);
 }
