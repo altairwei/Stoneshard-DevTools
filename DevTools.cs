@@ -95,10 +95,21 @@ public class DevTools : Mod
         Msl.AddNewEvent("o_devconsole", ModFiles.GetCode("gml_Object_o_devconsole_DrawGUIEnd_0.gml"), EventType.Draw, 75);
 
         // Nothing in vanilla creates the console; hook its creation next to
-        // the render controller. NOTE: the bundled decompiler emits no
-        // semicolons - anchors must omit them.
+        // the render controller, for a new game or a loaded save. NOTE: the
+        // bundled decompiler emits no semicolons - anchors must omit them.
         Msl.LoadGML("gml_GlobalScript_scr_sessionDataInit")
             .MatchFromUntil("if (!instance_exists(o_unitsRenderController))", "instance_create_depth(-50, -50, 0, o_unitsRenderController)")
+            .InsertBelow(@"
+    if (!instance_exists(o_devconsole))
+        instance_create_depth(0, 0, 0, o_devconsole)")
+            .Save();
+
+        // The main menu too - both menu rooms call scr_mainMenuInit - so the
+        // MCP server is up before any save is loaded and its game_* tools
+        // can load one. The console persists from there into the session;
+        // the guards keep it a single instance either way.
+        Msl.LoadGML("gml_GlobalScript_scr_mainMenuInit")
+            .MatchFrom("instance_create_depth(-50, -50, 0, o_mainmenusound)")
             .InsertBelow(@"
     if (!instance_exists(o_devconsole))
         instance_create_depth(0, 0, 0, o_devconsole)")
@@ -323,11 +334,15 @@ public class DevTools : Mod
     // MCP server (Codes/Mcp/): a Streamable HTTP endpoint on
     // http://127.0.0.1:8765/mcp, hosted by o_devconsole in pure GML - raw TCP
     // sockets from the Async Networking event, HTTP/1.1 and JSON-RPC parsing,
-    // and tools that run console commands and take screenshots. The network_*
-    // builtins the game never calls get forged function-table entries at
-    // build time, like the Multiplayer mod's o_webchannel. Registered in
-    // dependency order: the old compiler resolves bare function names when
-    // each script compiles, so every callee comes before its callers.
+    // and tools that run console commands, take screenshots, drive the game
+    // from the main menu into a save, and run events of instances or click
+    // them the way the game's own input dispatch does. The game_* tools are
+    // MCP only, never console commands: the console is for people. The
+    // network_* builtins the game never calls get forged function-table
+    // entries at build time, like the Multiplayer mod's o_webchannel.
+    // Registered in dependency order: the old compiler resolves bare function
+    // names when each script compiles, so every callee comes before its
+    // callers.
     private void PatchMcp()
     {
         foreach (string name in new[]
@@ -337,6 +352,7 @@ public class DevTools : Mod
             "scr_devtools_mcp_uint",
             "scr_devtools_mcp_json_str",
             "scr_devtools_mcp_json_id",
+            "scr_devtools_mcp_json_bool",
             // connection bookkeeping and HTTP replies
             "scr_devtools_mcp_drop",
             "scr_devtools_mcp_send",
@@ -347,6 +363,18 @@ public class DevTools : Mod
             "scr_devtools_mcp_reply_error",
             "scr_devtools_mcp_tool_reply",
             "scr_devtools_mcp_is_local",
+            // the game_* tools: phase and state reports, saves, loading,
+            // events and clicks
+            "scr_devtools_mcp_game_phase",
+            "scr_devtools_mcp_game_state",
+            "scr_devtools_mcp_game_save_problem",
+            "scr_devtools_mcp_game_saves",
+            "scr_devtools_mcp_game_load",
+            "scr_devtools_mcp_game_wait_check",
+            "scr_devtools_mcp_game_target",
+            "scr_devtools_mcp_game_instances",
+            "scr_devtools_mcp_game_event",
+            "scr_devtools_mcp_game_click",
             // tools, JSON-RPC dispatch, HTTP parser
             "scr_devtools_mcp_base64",
             "scr_devtools_mcp_console_execute",

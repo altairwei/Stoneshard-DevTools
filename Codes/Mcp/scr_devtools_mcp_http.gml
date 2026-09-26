@@ -33,8 +33,11 @@ function scr_devtools_mcp_http()
             return;
         if (!ds_map_exists(_mcp_clients, _sock))
             return;
-        // requests queued behind a pending screenshot wait for its reply
+        // requests queued behind a pending screenshot or game_wait wait for
+        // its reply
         if (_mcp_shot_sock == _sock)
+            return;
+        if (_mcp_wait_sock == _sock)
             return;
         _buf = ds_map_find_value(_mcp_clients, _sock);
         _len = ds_map_find_value(_mcp_lens, _sock);

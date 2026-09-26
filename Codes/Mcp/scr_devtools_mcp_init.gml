@@ -16,6 +16,13 @@ function scr_devtools_mcp_init()
     _mcp_shot_idj = "null";
     _mcp_shot_maxw = 1280;
     _mcp_shot_t = 0;
+    // pending game_wait: client socket or -1, JSON id, awaited phase, start
+    // time and timeout in microseconds
+    _mcp_wait_sock = -1;
+    _mcp_wait_idj = "null";
+    _mcp_wait_phase = "";
+    _mcp_wait_t = 0;
+    _mcp_wait_us = 0;
     // mcp start/stop typed as a command, applied by scr_devtools_mcp_tick
     _mcp_pending = "";
     _mcp_pending_port = 8765;

@@ -1,9 +1,10 @@
 // Step housekeeping: applies a deferred mcp start/stop - deferred so the
-// reply to an MCP client that sent the command still goes out - and times
-// out a screenshot the game never rendered.
+// reply to an MCP client that sent the command still goes out - times out a
+// screenshot the game never rendered and answers a game_wait when it is due.
 function scr_devtools_mcp_tick()
 {
     var _sock = -1;
+    var _text = "";
     if (_mcp_pending == "stop")
     {
         _mcp_pending = "";
@@ -23,6 +24,20 @@ function scr_devtools_mcp_tick()
             if (ds_map_exists(_mcp_clients, _sock))
             {
                 scr_devtools_mcp_tool_reply(_sock, _mcp_shot_idj, "screenshot timed out: the game did not render a frame within 3 seconds - is the window minimized?", true);
+                scr_devtools_mcp_http(_sock);
+            }
+        }
+    }
+    if (_mcp_wait_sock != -1)
+    {
+        _text = scr_devtools_mcp_game_wait_check();
+        if (_text != "")
+        {
+            _sock = _mcp_wait_sock;
+            _mcp_wait_sock = -1;
+            if (ds_map_exists(_mcp_clients, _sock))
+            {
+                scr_devtools_mcp_tool_reply(_sock, _mcp_wait_idj, _text, _mcp_exec_error);
                 scr_devtools_mcp_http(_sock);
             }
         }

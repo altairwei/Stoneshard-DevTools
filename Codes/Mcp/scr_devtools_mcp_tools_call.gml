@@ -1,6 +1,6 @@
 // tools/call: runs one tool. argument[0] socket, argument[1] JSON id text,
 // argument[2] params map or -1. The screenshot reply is deferred to Draw GUI
-// End, where the frame is complete.
+// End, where the frame is complete; a game_wait reply until its phase comes.
 function scr_devtools_mcp_tools_call()
 {
     var _sock = argument[0];
@@ -88,6 +88,82 @@ function scr_devtools_mcp_tools_call()
         _mcp_shot_idj = _idj;
         _mcp_shot_maxw = _n;
         _mcp_shot_t = get_timer();
+        return;
+    }
+    if (_name == "game_state")
+    {
+        scr_devtools_mcp_tool_reply(_sock, _idj, scr_devtools_mcp_game_state(), false);
+        return;
+    }
+    if (_name == "game_saves")
+    {
+        if (!variable_global_exists("slotsMap"))
+        {
+            scr_devtools_mcp_tool_reply(_sock, _idj, "the save slots are not initialized yet", true);
+            return;
+        }
+        scr_devtools_mcp_tool_reply(_sock, _idj, scr_devtools_mcp_game_saves(), false);
+        return;
+    }
+    if (_name == "game_load")
+    {
+        _text = scr_devtools_mcp_game_load(_args);
+        scr_devtools_mcp_tool_reply(_sock, _idj, _text, _mcp_exec_error);
+        return;
+    }
+    if (_name == "game_wait")
+    {
+        if (_mcp_wait_sock != -1)
+        {
+            scr_devtools_mcp_tool_reply(_sock, _idj, "another game_wait is in progress - try again", true);
+            return;
+        }
+        _cmd = "";
+        if (_args != -1)
+        {
+            _v = ds_map_find_value(_args, "phase");
+            if (is_string(_v))
+                _cmd = _v;
+        }
+        if (_cmd != "menu" && _cmd != "session")
+        {
+            scr_devtools_mcp_tool_reply(_sock, _idj, "argument 'phase' must be \"menu\" or \"session\"", true);
+            return;
+        }
+        _n = 30;
+        if (_args != -1)
+        {
+            _v = ds_map_find_value(_args, "timeout");
+            if (is_numeric(_v))
+                _n = max(0, min(50, real(_v)));
+        }
+        // answered right away when already due, otherwise from the step by
+        // scr_devtools_mcp_tick
+        _mcp_wait_phase = _cmd;
+        _mcp_wait_t = get_timer();
+        _mcp_wait_us = _n * 1000000;
+        _text = scr_devtools_mcp_game_wait_check();
+        if (_text != "")
+        {
+            scr_devtools_mcp_tool_reply(_sock, _idj, _text, _mcp_exec_error);
+            return;
+        }
+        _mcp_wait_sock = _sock;
+        _mcp_wait_idj = _idj;
+        return;
+    }
+    if (_name == "game_event" || _name == "game_click")
+    {
+        if (_name == "game_event")
+            _text = scr_devtools_mcp_game_event(_args);
+        else
+            _text = scr_devtools_mcp_game_click(_args);
+        // the event may have destroyed the console or closed this client
+        if (!_mcp_alive)
+            return;
+        if (!ds_map_exists(_mcp_clients, _sock))
+            return;
+        scr_devtools_mcp_tool_reply(_sock, _idj, _text, _mcp_exec_error);
         return;
     }
     scr_devtools_mcp_reply_error(_sock, "200 OK", _idj, -32602, "Unknown tool: " + _name);

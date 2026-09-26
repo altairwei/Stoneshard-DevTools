@@ -62,7 +62,7 @@ function scr_devtools_mcp_rpc()
                     _pv = _v;
             }
         }
-        scr_devtools_mcp_reply(_sock, _idj, "{\"protocolVersion\":\"" + _pv + "\",\"capabilities\":{\"tools\":{\"listChanged\":false}},\"serverInfo\":{\"name\":\"stoneshard-devtools\",\"title\":\"Stoneshard DevTools\",\"version\":\"1.2.0\"},\"instructions\":" + scr_devtools_mcp_json_str("Drives the Stoneshard DevTools console in the running game. console_execute runs one console command - the same as typing it into the F2 console - and returns what it printed; start with 'help' to list commands and 'help <command>' for usage. console_read shows recent console history. screenshot captures the game window.") + "}");
+        scr_devtools_mcp_reply(_sock, _idj, "{\"protocolVersion\":\"" + _pv + "\",\"capabilities\":{\"tools\":{\"listChanged\":false}},\"serverInfo\":{\"name\":\"stoneshard-devtools\",\"title\":\"Stoneshard DevTools\",\"version\":\"1.2.0\"},\"instructions\":" + scr_devtools_mcp_json_str("Drives the Stoneshard DevTools console in the running game. console_execute runs one console command - the same as typing it into the F2 console - and returns what it printed; start with 'help' to list commands and 'help <command>' for usage. Most commands need a loaded game: game_state tells where the game is, game_saves lists the saves, game_load loads one and game_wait waits for the main menu or the loaded game. console_read shows recent console history. screenshot captures the game window.") + "}");
     }
     else if (_method == "ping")
         scr_devtools_mcp_reply(_sock, _idj, "{}");

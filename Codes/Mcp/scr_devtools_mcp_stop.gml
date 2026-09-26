@@ -16,6 +16,7 @@ function scr_devtools_mcp_stop()
     ds_map_clear(_mcp_lens);
     ds_map_clear(_mcp_cont);
     _mcp_shot_sock = -1;
+    _mcp_wait_sock = -1;
     if (_mcp_server >= 0)
     {
         network_destroy(_mcp_server);
